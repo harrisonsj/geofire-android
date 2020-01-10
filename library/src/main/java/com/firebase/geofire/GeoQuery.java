@@ -113,7 +113,7 @@ public class GeoQuery {
 
     private boolean locationIsInQuery(GeoLocation location) {
         if (this.radius > 4000){
-            return true
+            return true;
         }else {
             return GeoUtils.distance(location, center) <= this.radius;
         }
