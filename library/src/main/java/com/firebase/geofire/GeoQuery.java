@@ -112,7 +112,11 @@ public class GeoQuery {
     }
 
     private boolean locationIsInQuery(GeoLocation location) {
-        return GeoUtils.distance(location, center) <= this.radius;
+        if (this.radius > 4000){
+            return true
+        }else {
+            return GeoUtils.distance(location, center) <= this.radius;
+        }
     }
 
     private void updateLocationInfo(final DataSnapshot dataSnapshot, final GeoLocation location) {
