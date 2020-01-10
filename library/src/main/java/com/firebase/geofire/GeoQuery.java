@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -229,8 +230,16 @@ public class GeoQuery {
 
     private void setupQueries() {
         Set<GeoHashQuery> oldQueries = (this.queries == null) ? new HashSet<GeoHashQuery>() : this.queries;
-        Set<GeoHashQuery> newQueries = GeoHashQuery.queriesAtLocation(center, radius);
+
+        Set<GeoHashQuery> newQueries;
+        if(this.getRadius() > 4000){
+            //If radius is larger than ~maximum, just return values for any geohash
+            newQueries = new HashSet<>(Arrays.asList(new GeoHashQuery("0", "zzzzzzzzzzzzzzzzzzzzzz\uf8ff")));
+        }else{
+            newQueries = GeoHashQuery.queriesAtLocation(center, radius);
+        }
         this.queries = newQueries;
+
         for (GeoHashQuery query: oldQueries) {
             if (!newQueries.contains(query)) {
                 firebaseQueries.get(query).removeEventListener(this.childEventLister);
